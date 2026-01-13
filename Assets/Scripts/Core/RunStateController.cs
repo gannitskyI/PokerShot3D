@@ -9,7 +9,8 @@ public class RunStateController : MonoBehaviour
     [SerializeField] private int currentWave = 0;
     [SerializeField] private int currentScore = 0;
     [SerializeField] private RunPhase currentPhase = RunPhase.Preparing;
-
+    [Header("Systems")]
+    [SerializeField] private WaveSpawner waveSpawner;
     public enum RunPhase
     {
         Preparing,      // Перед запуском первой волны / в меню
@@ -64,7 +65,6 @@ public class RunStateController : MonoBehaviour
     {
         currentWave++;
 
-         
         if (currentWave - 1 < normalWaveSequence.Length)
         {
             currentWaveConfig = normalWaveSequence[currentWave - 1];
@@ -73,14 +73,21 @@ public class RunStateController : MonoBehaviour
         }
         else
         {
-            // Переход к боссу
             currentWaveConfig = bossWaveConfig;
             currentPhase = RunPhase.BossFight;
             Debug.Log("[RunState] Переход к босс-фазе!");
         }
 
-        // Здесь в будущем: 
-        // OnWaveStarted?.Invoke(currentWaveConfig);
+        // ? Вот это добавляем — запуск спавна!
+        if (waveSpawner != null && currentWaveConfig != null)
+        {
+            waveSpawner.StartWave(currentWaveConfig);
+            Debug.Log("[RunState] Вызван StartWave на WaveSpawner");
+        }
+        else
+        {
+            Debug.LogError("[RunState] WaveSpawner или currentWaveConfig = null!");
+        }
     }
 
     public void AddScore(int points)

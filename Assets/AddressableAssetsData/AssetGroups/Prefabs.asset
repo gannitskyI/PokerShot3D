@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Prefabs
   m_GUID: 0d740d9ea35eff14fac2280bf8926138
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 4884af229b89f7a4a8d63bb6c23b8fd9
+    m_Address: GroundEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d0c08f85b3475c941879d7b696da9e8b
+    m_Address: PlayerPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ecd3406daf3aff5438749fd28e02c780, type: 2}
   m_SchemaSet:

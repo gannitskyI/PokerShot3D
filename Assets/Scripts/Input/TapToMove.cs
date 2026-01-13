@@ -58,9 +58,7 @@ public class TapToMove : MonoBehaviour
     private void OnPressCanceled(InputAction.CallbackContext context)
     {
         if (isFollowing)
-        {
-            // Hold был: затухнуть (drag)
-            Debug.Log("[TapToMove] Hold release: Затухнуть");
+        { 
             return;
         }
 
@@ -70,7 +68,7 @@ public class TapToMove : MonoBehaviour
         {
             // Self-tap: immediate stop
             rb.linearVelocity = Vector3.zero;
-            Debug.Log("[TapToMove] Self-tap: Stop");
+           
         }
     }
 
@@ -99,13 +97,13 @@ public class TapToMove : MonoBehaviour
 
             if (Vector3.Distance(worldPos, transform.position) < config.minTapDistance)
             {
-                Debug.Log("[TapToMove] Игнор self-target");
+               
                 return;
             }
 
             targetPosition = worldPos;
             hasMoveTarget = true;
-            Debug.Log("[TapToMove] Target set: " + targetPosition);
+           
         }
     }
 
@@ -121,8 +119,7 @@ public class TapToMove : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPosition) < config.stopDistance)
         {
             rb.linearVelocity = Vector3.zero;
-            hasMoveTarget = false;
-            Debug.Log("[TapToMove] Hard stop достигнут");
+            hasMoveTarget = false; 
         }
     }
 
