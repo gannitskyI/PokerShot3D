@@ -40,27 +40,42 @@ public class Bootstrap : MonoBehaviour
             GameObject playerPrefab = handle.Result;
             GameObject playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
 
-            // Настройка компонентов
-            var tapToMove = playerInstance.GetComponent<TapToMove>();
-            if (tapToMove != null)
-            {
-                // Принудительно устанавливаем config (если не через prefab)
-                // tapToMove.SetConfig(playerConfig);  // если добавишь setter
-            }
-
-            // Камера следует за ним
+            // Камера следует за игроком
             if (vcamTopDown != null)
             {
                 vcamTopDown.Follow = playerInstance.transform;
             }
 
-            Debug.Log("[Bootstrap] Игрок заспавнен из Addressables");
+            // Передача ChipMagnet в ActivateButton (один раз после спавна)
+            var activateButton = FindObjectOfType<ActivateButton>();
+            if (activateButton != null)
+            {
+                var chipMagnet = playerInstance.GetComponent<ChipMagnet>();
+                var handVisual = playerInstance.GetComponent<HandVisualManager>();
+
+                if (chipMagnet != null && handVisual != null)
+                {
+                    activateButton.Init(chipMagnet, handVisual);
+                    Debug.Log("[Bootstrap] ChipMagnet + HandVisualManager успешно переданы в ActivateButton");
+                }
+                else
+                {
+                    Debug.LogError("[Bootstrap] ChipMagnet или HandVisualManager не найдены на игроке!");
+                }
+            }
+            else
+            {
+                Debug.LogError("[Bootstrap] ActivateButton не найден в сцене!");
+            }
+
+            Debug.Log("[Bootstrap] Инициализация завершена");
         }
         else
         {
             Debug.LogError($"[Bootstrap] Не удалось загрузить {playerAddressableKey}");
         }
     }
+ 
 
     private void OnDestroy()
     {

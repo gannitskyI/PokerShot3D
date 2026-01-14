@@ -53,8 +53,9 @@ public class ChipPool : MonoBehaviour
     public void ReturnChip(GameObject chip)
     {
         chip.SetActive(false);
-        chip.transform.position = Vector3.zero;  // или спр€чь куда-то
+        chip.transform.position = new Vector3(1000, 1000, 1000);  // off-screen, чтобы не мешать
         chip.transform.rotation = Quaternion.identity;
         pool.Enqueue(chip);
+        Debug.Log($"[ChipPool] „ип {chip.name} возвращЄн в пул");
     }
 }
