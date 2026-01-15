@@ -52,20 +52,17 @@ public class Bootstrap : MonoBehaviour
             {
                 var chipMagnet = playerInstance.GetComponent<ChipMagnet>();
                 var handVisual = playerInstance.GetComponent<HandVisualManager>();
+                var activationAnimator = playerInstance.GetComponent<ActivationAnimator>();
 
-                if (chipMagnet != null && handVisual != null)
+                if (chipMagnet != null && handVisual != null && activationAnimator != null)
                 {
-                    activateButton.Init(chipMagnet, handVisual);
-                    Debug.Log("[Bootstrap] ChipMagnet + HandVisualManager успешно переданы в ActivateButton");
+                    activateButton.Init(chipMagnet, handVisual, activationAnimator);
+                    Debug.Log("[Bootstrap] Всё передано в ActivateButton");
                 }
                 else
                 {
-                    Debug.LogError("[Bootstrap] ChipMagnet или HandVisualManager не найдены на игроке!");
+                    Debug.LogError("[Bootstrap] Не все компоненты на игроке!");
                 }
-            }
-            else
-            {
-                Debug.LogError("[Bootstrap] ActivateButton не найден в сцене!");
             }
 
             Debug.Log("[Bootstrap] Инициализация завершена");

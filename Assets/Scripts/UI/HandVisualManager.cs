@@ -22,7 +22,10 @@ public class HandVisualManager : MonoBehaviour
     {
         Debug.Log("[HandVisualManager] Èíèöèàëèçèğîâàí");
     }
-
+    public GameObject[] GetCurrentCards()
+    {
+        return currentCards.ToArray();
+    }
     public void AddCardVisual(Chip.CardData cardData, Vector3 fromPosition)
     {
         if (currentCards.Count >= 5) return;
