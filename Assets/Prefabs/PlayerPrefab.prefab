@@ -270,6 +270,8 @@ GameObject:
   - component: {fileID: 6646800766077558875}
   - component: {fileID: 2805957702014133657}
   - component: {fileID: 8035592404719690642}
+  - component: {fileID: 5892543289906457468}
+  - component: {fileID: 8149210259771140236}
   m_Layer: 6
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -431,6 +433,8 @@ MonoBehaviour:
   - {fileID: 5632539053334874112}
   - {fileID: 7556920004753475059}
   - {fileID: 14285656906262215}
+  damageMultiplier: 1
+  fireRateMultiplier: 1
 --- !u!114 &4817438173595501722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -555,6 +559,42 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &5892543289906457468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6286598575295561132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9484719095c57644bee265914b413fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 100
+  regenPerSecond: 1
+  regenDelayAfterDamage: 3
+  OnDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8149210259771140236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6286598575295561132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7711545b5b7e5a84aaebeabc49d1a08c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ComboEffects
 --- !u!1 &7206690605058386796
 GameObject:
   m_ObjectHideFlags: 0

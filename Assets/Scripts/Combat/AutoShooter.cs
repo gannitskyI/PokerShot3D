@@ -7,6 +7,10 @@ public class AutoShooter : MonoBehaviour
     [SerializeField] private WeaponConfig config;
     [SerializeField] private Transform[] muzzlePoints; // 3–4 точки вокруг
 
+    public float damageMultiplier = 1f;
+    public float fireRateMultiplier = 1f;
+
+    private float baseFireRate;
     private float fireTimer;
     private List<Transform> enemiesInRange = new List<Transform>();
 
@@ -18,7 +22,7 @@ public class AutoShooter : MonoBehaviour
         if (muzzlePoints == null || muzzlePoints.Length == 0)
             Debug.LogWarning("[AutoShooter] Нет muzzle points!");
 
-        // Создаём LineRenderer для визуала
+        baseFireRate = config.fireRate;
         lineRenderers = new LineRenderer[config.maxTargets];
         for (int i = 0; i < config.maxTargets; i++)
         {
@@ -38,7 +42,7 @@ public class AutoShooter : MonoBehaviour
     private void Update()
     {
         fireTimer += Time.deltaTime;
-        if (fireTimer >= 1f / config.fireRate)
+        if (fireTimer >= 1f / (config.fireRate * fireRateMultiplier))
         {
             ShootNearest();
             fireTimer = 0f;
@@ -70,7 +74,7 @@ public class AutoShooter : MonoBehaviour
                     var health = target.GetComponent<EnemyHealth>();
                     if (health != null)
                     {
-                        health.TakeDamage(config.damagePerShot);
+                        health.TakeDamage(config.damagePerShot * damageMultiplier);
                         ShowShotVisual(muzzlePoints[targetsHit % muzzlePoints.Length].position, hitInfo.point);
                         targetsHit++;
                     }

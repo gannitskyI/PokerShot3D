@@ -64,6 +64,7 @@ public class Bootstrap : MonoBehaviour
                     Debug.LogError("[Bootstrap] Не все компоненты на игроке!");
                 }
             }
+            var comboEffects = playerInstance.GetComponent<ComboEffects>();
 
             Debug.Log("[Bootstrap] Инициализация завершена");
         }

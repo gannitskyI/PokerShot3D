@@ -83,22 +83,10 @@ public class ActivateButton : MonoBehaviour
 
     private void ApplyComboEffect(PokerEvaluator.HandResult result)
     {
-        var animator = FindObjectOfType<ActivationAnimator>(); 
-        if (animator != null)
-            animator.PlayActivation(result);
-        switch (result.type)
-        {
-            case PokerEvaluator.HandType.Pair:
-                Debug.Log("[Combo] ?2 урон на 6 сек");
-                break;
-            case PokerEvaluator.HandType.RoyalFlush:
-                Debug.Log("[Combo] –ќяЋ-‘Ћ≈Ў Ч Ќё  ј–≈Ќџ!");
-                var enemies = FindObjectsOfType<EnemyHealth>();
-                foreach (var e in enemies) e.TakeDamage(9999f);
-                break;
-            default:
-                Debug.Log("[Combo] Ѕазовый эффект");
-                break;
-        }
+        var comboEffects = FindObjectOfType<ComboEffects>(); // один раз в сцене, позже через Init
+        if (comboEffects != null)
+            comboEffects.ApplyCombo(result);
+        else
+            Debug.LogWarning("[ActivateButton] ComboEffects не найден!");
     }
 }
