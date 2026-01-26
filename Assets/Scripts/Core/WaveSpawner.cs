@@ -1,64 +1,75 @@
 using UnityEngine;
 using System.Collections;
+using static RunStateController;
 
 public class WaveSpawner : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnPoints; // точки по краю арены (создай 8–12 пустых GO)
+    [SerializeField] private Transform[] spawnPoints; // точки по краю арены (8–12 GO)
 
+    // Поля для состояния волны
+    private WaveConfig currentWave;
+    private int spawned = 0;
+    private int concurrent = 0;
+    private bool isWaveActive = false;  // ? добавили поле
     private Coroutine spawnRoutine;
-
-    private void OnEnable()
-    {
-        if (RunStateController.Instance != null)
-        {
-            // Подписка на событие (пока без событий — вызываем вручную)
-        }
-    }
 
     public void StartWave(WaveConfig wave)
     {
         if (spawnRoutine != null) StopCoroutine(spawnRoutine);
-        spawnRoutine = StartCoroutine(SpawnWaveRoutine(wave));
+
+        currentWave = wave;
+        spawned = 0;
+        concurrent = 0;
+        isWaveActive = true;  // ? волна активна
+
+        spawnRoutine = StartCoroutine(SpawnWaveRoutine());
+
+        if (WaveTracker.Instance != null)
+            WaveTracker.Instance.StartWave();
     }
 
-    private IEnumerator SpawnWaveRoutine(WaveConfig wave)
+    private IEnumerator SpawnWaveRoutine()
     {
-        int spawned = 0;
-        int concurrent = 0;
-
-        while (spawned < wave.totalEnemies)
+        while (spawned < currentWave.totalEnemies)
         {
-            if (concurrent < wave.maxConcurrentEnemies)
+            if (concurrent < currentWave.maxConcurrentEnemies)
             {
-                SpawnOneEnemy(wave);
+                SpawnOneEnemy();
                 spawned++;
                 concurrent++;
             }
 
-            yield return new WaitForSeconds(wave.spawnInterval);
+            yield return new WaitForSeconds(currentWave.spawnInterval);
         }
-
-        // Ждём пока все умрут (позже через событие OnEnemyDied)
-        yield return new WaitUntil(() => concurrent <= 0);
-        RunStateController.Instance.EndWave();
     }
 
-    private void SpawnOneEnemy(WaveConfig wave)
+    private void Update()
     {
-        var chosenInfo = GetWeightedEnemyInfo(wave);
+        if (isWaveActive && WaveTracker.Instance != null && WaveTracker.Instance.ConcurrentEnemies == 0 && spawned >= currentWave.totalEnemies)
+        {
+            RunStateController.Instance.EndWave();
+            isWaveActive = false;
+            currentWave = null;
+        }
+    }
+
+    private void SpawnOneEnemy()
+    {
+        var chosenInfo = GetWeightedEnemyInfo(currentWave);
         if (chosenInfo == null || chosenInfo.enemyPrefab == null)
         {
             Debug.LogError("[WaveSpawner] Нет префаба в выбранном info");
             return;
         }
 
-        Debug.Log($"[WaveSpawner] Выбран префаб: {chosenInfo.enemyPrefab.name}");
-
         Vector3 pos = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
         pos.y = 0.5f;
 
         GameObject enemy = EnemyPool.Instance.GetEnemy(chosenInfo.enemyPrefab);
         enemy.transform.position = pos;
+
+        if (WaveTracker.Instance != null)
+            WaveTracker.Instance.EnemySpawned(enemy);
 
         Debug.Log($"Spawned {chosenInfo.enemyPrefab.name} at {pos}");
     }
@@ -78,5 +89,4 @@ public class WaveSpawner : MonoBehaviour
         }
         return null;
     }
- 
 }

@@ -45,8 +45,21 @@ public class Bootstrap : MonoBehaviour
             {
                 vcamTopDown.Follow = playerInstance.transform;
             }
+            var health = playerInstance.GetComponent<Health>();
+            var runState = RunStateController.Instance;  // уже singleton
 
-            // Передача ChipMagnet в ActivateButton (один раз после спавна)
+            // Находим HUDManager в сцене
+            var hudManager = FindObjectOfType<HUDManager>();
+            if (hudManager != null && health != null && runState != null)
+            {
+                hudManager.Init(health, runState);
+                Debug.Log("[Bootstrap] HUDManager инициализирован с Health и RunState");
+            }
+            else
+            {
+                Debug.LogError("[Bootstrap] Не удалось инициализировать HUDManager");
+            }
+
             var activateButton = FindObjectOfType<ActivateButton>();
             if (activateButton != null)
             {

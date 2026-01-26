@@ -17,4 +17,8 @@ MonoBehaviour:
   maxConcurrentEnemies: 10
   spawnInterval: 2.5
   maxWaveDuration: 60
-  enemySpawnInfos: []
+  enemySpawnInfos:
+  - enemyPrefab: {fileID: 8479731776969005122, guid: 4884af229b89f7a4a8d63bb6c23b8fd9, type: 3}
+    weight: 0
+    minCount: 0
+    maxCount: 0

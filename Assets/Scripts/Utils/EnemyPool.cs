@@ -40,17 +40,16 @@ public class EnemyPool : MonoBehaviour
 
     public GameObject GetEnemy(GameObject prefab)
     {
-        Debug.Log($"[EnemyPool] Запрос врага: {prefab?.name ?? "null prefab"}");
         if (prefab == null)
         {
-            Debug.LogError("[EnemyPool] prefab == null в GetEnemy");
+            Debug.LogError("[EnemyPool] GetEnemy: prefab == null!");
             return null;
         }
 
         if (!pools.ContainsKey(prefab) || pools[prefab].Count == 0)
         {
             GameObject enemy = Instantiate(prefab);
-            SetupEnemy(enemy, null); // временно, потом передавать info
+            SetupEnemy(enemy, null);
             return enemy;
         }
 
@@ -58,12 +57,18 @@ public class EnemyPool : MonoBehaviour
         obj.SetActive(true);
         return obj;
     }
-
     public void ReturnEnemy(GameObject enemy, GameObject prefabKey)
     {
         if (enemy == null) return;
+
         enemy.SetActive(false);
-        enemy.transform.position = Vector3.zero;
+        enemy.transform.position = new Vector3(1000, 1000, 1000);
+        enemy.transform.rotation = Quaternion.identity;
+
+        // КРИТИЧНО: отписываемся от события смерти
+        if (WaveTracker.Instance != null)
+            WaveTracker.Instance.EnemyReturned(enemy);
+
         if (pools.ContainsKey(prefabKey))
             pools[prefabKey].Enqueue(enemy);
     }

@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class Health : MonoBehaviour
 {
     [Header("Base Stats")]
-    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] public float maxHealth = 100f;  // ? добавляем public
     [SerializeField] private float regenPerSecond = 1f;        // реген вне боя
     [SerializeField] private float regenDelayAfterDamage = 3f; // задержка после урона
 
@@ -17,6 +17,7 @@ public class Health : MonoBehaviour
     private float lastDamageTime;
     private bool isDead;
 
+   
     public float CurrentHealth => currentHealth;
     public float NormalizedHealth => currentHealth / maxHealth;
     public bool IsDead => isDead;

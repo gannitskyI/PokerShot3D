@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.Events;
 
 public class RunStateController : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class RunStateController : MonoBehaviour
         GameOver,       // Проигрыш
         Victory         // Победа после босса
     }
+    [Header("Events")]
+    public UnityEvent<int> OnScoreChanged = new UnityEvent<int>();
 
     [Header("Wave Progression")]
     [Tooltip("Последовательность обычных волн (8–10 штук)")]
@@ -38,6 +41,7 @@ public class RunStateController : MonoBehaviour
 
     private void Awake()
     {
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -46,7 +50,8 @@ public class RunStateController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
+        if (WaveTracker.Instance != null)
+            WaveTracker.Instance.OnWaveCompleted.AddListener(EndWave);
         // Для воспроизводимости на собесе можно закомментировать и использовать фиксированный seed
         // Random.InitState(42);
     }
@@ -88,12 +93,15 @@ public class RunStateController : MonoBehaviour
         {
             Debug.LogError("[RunState] WaveSpawner или currentWaveConfig = null!");
         }
+        if (waveSpawner != null && currentWaveConfig != null)
+            waveSpawner.StartWave(currentWaveConfig);
     }
 
     public void AddScore(int points)
     {
         currentScore += points;
-        // В будущем: OnScoreChanged?.Invoke(currentScore);
+        OnScoreChanged.Invoke(currentScore);  // ? теперь вызываем событие
+        Debug.Log($"[RunState] Очки обновлены: {currentScore}");
     }
 
     public void EndWave()
