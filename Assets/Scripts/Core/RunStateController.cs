@@ -52,8 +52,6 @@ public class RunStateController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         if (WaveTracker.Instance != null)
             WaveTracker.Instance.OnWaveCompleted.AddListener(EndWave);
-        // Для воспроизводимости на собесе можно закомментировать и использовать фиксированный seed
-        // Random.InitState(42);
     }
 
     public void StartNewRun()
@@ -68,6 +66,8 @@ public class RunStateController : MonoBehaviour
 
     public void AdvanceToNextWave()
     {
+        if (currentPhase != RunPhase.Preparing && currentPhase != RunPhase.Shopping) return;  // ? защита
+
         currentWave++;
 
         if (currentWave - 1 < normalWaveSequence.Length)
@@ -83,16 +83,6 @@ public class RunStateController : MonoBehaviour
             Debug.Log("[RunState] Переход к босс-фазе!");
         }
 
-        // ? Вот это добавляем — запуск спавна!
-        if (waveSpawner != null && currentWaveConfig != null)
-        {
-            waveSpawner.StartWave(currentWaveConfig);
-            Debug.Log("[RunState] Вызван StartWave на WaveSpawner");
-        }
-        else
-        {
-            Debug.LogError("[RunState] WaveSpawner или currentWaveConfig = null!");
-        }
         if (waveSpawner != null && currentWaveConfig != null)
             waveSpawner.StartWave(currentWaveConfig);
     }

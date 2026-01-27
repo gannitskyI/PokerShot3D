@@ -4,14 +4,13 @@ using static RunStateController;
 
 public class WaveSpawner : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnPoints; // точки по краю арены (8–12 GO)
+    [SerializeField] private Transform[] spawnPoints;
 
-    // Поля для состояния волны
     private WaveConfig currentWave;
     private int spawned = 0;
     private int concurrent = 0;
-    private bool isWaveActive = false;  // ? добавили поле
     private Coroutine spawnRoutine;
+    private bool isWaveActive = false;
 
     public void StartWave(WaveConfig wave)
     {
@@ -20,7 +19,7 @@ public class WaveSpawner : MonoBehaviour
         currentWave = wave;
         spawned = 0;
         concurrent = 0;
-        isWaveActive = true;  // ? волна активна
+        isWaveActive = true;
 
         spawnRoutine = StartCoroutine(SpawnWaveRoutine());
 
@@ -30,7 +29,9 @@ public class WaveSpawner : MonoBehaviour
 
     private IEnumerator SpawnWaveRoutine()
     {
-        while (spawned < currentWave.totalEnemies)
+        if (currentWave == null) yield break;
+
+        while (spawned < currentWave.totalEnemies && isWaveActive)
         {
             if (concurrent < currentWave.maxConcurrentEnemies)
             {
@@ -45,20 +46,29 @@ public class WaveSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (isWaveActive && WaveTracker.Instance != null && WaveTracker.Instance.ConcurrentEnemies == 0 && spawned >= currentWave.totalEnemies)
+        if (!isWaveActive) return;
+
+        if (WaveTracker.Instance != null && WaveTracker.Instance.LiveEnemies == 0 && spawned >= currentWave.totalEnemies)
         {
             RunStateController.Instance.EndWave();
             isWaveActive = false;
             currentWave = null;
+            if (spawnRoutine != null)
+            {
+                StopCoroutine(spawnRoutine);
+                spawnRoutine = null;
+            }
         }
     }
 
     private void SpawnOneEnemy()
     {
+        if (currentWave == null) return;
+
         var chosenInfo = GetWeightedEnemyInfo(currentWave);
         if (chosenInfo == null || chosenInfo.enemyPrefab == null)
         {
-            Debug.LogError("[WaveSpawner] Нет префаба в выбранном info");
+            Debug.LogError("[WaveSpawner] Нет префаба");
             return;
         }
 
@@ -66,6 +76,8 @@ public class WaveSpawner : MonoBehaviour
         pos.y = 0.5f;
 
         GameObject enemy = EnemyPool.Instance.GetEnemy(chosenInfo.enemyPrefab);
+        if (enemy == null) return;
+
         enemy.transform.position = pos;
 
         if (WaveTracker.Instance != null)

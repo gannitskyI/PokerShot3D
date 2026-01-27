@@ -22,3 +22,7 @@ MonoBehaviour:
     weight: 1
     minCount: 6
     maxCount: 6
+  - enemyPrefab: {fileID: 8479731776969005122, guid: 7661507d163dd584bbc39689920e68bc, type: 3}
+    weight: 0.452
+    minCount: 6
+    maxCount: 6

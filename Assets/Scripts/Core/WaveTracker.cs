@@ -10,31 +10,24 @@ public class WaveTracker : MonoBehaviour
     public UnityEvent OnWaveStarted = new UnityEvent();
     public UnityEvent OnWaveCompleted = new UnityEvent();
 
-    // ќткрываем дл€ редактора (можно [HideInInspector] если не хочешь видеть в инспекторе)
     public List<GameObject> activeEnemies = new List<GameObject>();
 
-    private int concurrentEnemies = 0;
+    private int liveEnemies = 0;  // ? concurrentEnemies переименован в liveEnemies
     private bool isWaveActive;
 
-    public int ConcurrentEnemies => concurrentEnemies;
+    public int LiveEnemies => liveEnemies;  // ? дл€ HUD
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
         Instance = this;
     }
 
     public void StartWave()
     {
         activeEnemies.Clear();
-        concurrentEnemies = 0;
+        liveEnemies = 0;
         isWaveActive = true;
         OnWaveStarted.Invoke();
-        Debug.Log("[WaveTracker] ¬олна стартовала");
     }
 
     public void EnemySpawned(GameObject enemy)
@@ -42,12 +35,12 @@ public class WaveTracker : MonoBehaviour
         if (!isWaveActive || enemy == null) return;
 
         activeEnemies.Add(enemy);
-        concurrentEnemies++;
+        liveEnemies++;  // ? +1 живой враг
 
         var health = enemy.GetComponent<Health>();
         if (health != null)
         {
-            health.OnDeath.AddListener(() => EnemyDied(enemy));
+            health.OnDeath.AddListener(EnemyDied);
         }
     }
 
@@ -56,21 +49,20 @@ public class WaveTracker : MonoBehaviour
         if (enemy == null) return;
 
         activeEnemies.Remove(enemy);
-        concurrentEnemies = Mathf.Max(0, concurrentEnemies - 1);
 
         var health = enemy.GetComponent<Health>();
         if (health != null)
         {
-            health.OnDeath.RemoveListener(() => EnemyDied(enemy));
+            health.OnDeath.RemoveListener(EnemyDied);
         }
     }
 
-    public void EnemyDied(GameObject enemy)
+    public void EnemyDied()
     {
-        activeEnemies.Remove(enemy);
-        concurrentEnemies = Mathf.Max(0, concurrentEnemies - 1);
+        liveEnemies--;  // ? -1 живой враг (только при смерти)
+        activeEnemies.RemoveAll(e => e == null || !e.activeSelf);
 
-        if (concurrentEnemies == 0 && isWaveActive)
+        if (liveEnemies == 0 && isWaveActive)
         {
             isWaveActive = false;
             OnWaveCompleted.Invoke();

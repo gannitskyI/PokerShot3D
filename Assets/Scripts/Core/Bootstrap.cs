@@ -20,7 +20,7 @@ public class Bootstrap : MonoBehaviour
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 Debug.Log("[Bootstrap] Addressables успешно инициализированы");
-                RunStateController.Instance?.StartNewRun();
+        
                 SpawnPlayerAsync().ContinueWith(_ => Debug.Log("[Bootstrap] Инициализация завершена"));
             }
             else
@@ -40,44 +40,23 @@ public class Bootstrap : MonoBehaviour
             GameObject playerPrefab = handle.Result;
             GameObject playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
 
-            // Камера следует за игроком
+            // Камера
             if (vcamTopDown != null)
-            {
                 vcamTopDown.Follow = playerInstance.transform;
-            }
-            var health = playerInstance.GetComponent<Health>();
-            var runState = RunStateController.Instance;  // уже singleton
 
-            // Находим HUDManager в сцене
-            var hudManager = FindObjectOfType<HUDManager>();
-            if (hudManager != null && health != null && runState != null)
-            {
-                hudManager.Init(health, runState);
-                Debug.Log("[Bootstrap] HUDManager инициализирован с Health и RunState");
-            }
-            else
-            {
-                Debug.LogError("[Bootstrap] Не удалось инициализировать HUDManager");
-            }
-
+            // Передача ссылок
             var activateButton = FindObjectOfType<ActivateButton>();
             if (activateButton != null)
             {
                 var chipMagnet = playerInstance.GetComponent<ChipMagnet>();
                 var handVisual = playerInstance.GetComponent<HandVisualManager>();
                 var activationAnimator = playerInstance.GetComponent<ActivationAnimator>();
-
                 if (chipMagnet != null && handVisual != null && activationAnimator != null)
-                {
                     activateButton.Init(chipMagnet, handVisual, activationAnimator);
-                    Debug.Log("[Bootstrap] Всё передано в ActivateButton");
-                }
-                else
-                {
-                    Debug.LogError("[Bootstrap] Не все компоненты на игроке!");
-                }
             }
-            var comboEffects = playerInstance.GetComponent<ComboEffects>();
+
+            // Теперь стартуем run (игрок уже спавнен)
+            RunStateController.Instance.StartNewRun();
 
             Debug.Log("[Bootstrap] Инициализация завершена");
         }
@@ -86,7 +65,7 @@ public class Bootstrap : MonoBehaviour
             Debug.LogError($"[Bootstrap] Не удалось загрузить {playerAddressableKey}");
         }
     }
- 
+
 
     private void OnDestroy()
     {

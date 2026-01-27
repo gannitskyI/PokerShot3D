@@ -24,14 +24,14 @@ public class EnemyHealth : Health
             Die();
         }
     }
-
     private void Die()
     {
         RunStateController.Instance.AddScore(50);
 
         if (WaveTracker.Instance != null)
-            WaveTracker.Instance.EnemyDied(gameObject);  // ? теперь public
+            WaveTracker.Instance.EnemyDied();  // ? только смерть
 
-        gameObject.SetActive(false);
+        // Ќ≈ SetActive(false) здесь Ч пул сам вернЄт
+        EnemyPool.Instance.ReturnEnemy(gameObject);  // ? только gameObject
     }
 }

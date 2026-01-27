@@ -12,13 +12,13 @@ GameObject:
   - component: {fileID: 8695413001584120082}
   - component: {fileID: 3009798889395966568}
   - component: {fileID: 3853343658247151768}
+  - component: {fileID: 2718155482122751567}
   - component: {fileID: 1092711828033499459}
   - component: {fileID: -1473766955098687535}
   - component: {fileID: 5311980631881389472}
-  - component: {fileID: 7437772730516092881}
-  - component: {fileID: 4083370729020900509}
+  - component: {fileID: 1216502438278243433}
   m_Layer: 7
-  m_Name: GroundEnemy
+  m_Name: GroundEnemy 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,6 +117,31 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2718155482122751567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479731776969005122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7486924aeccd1a74f8b5916e7b957202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxHealth: 100
+  regenPerSecond: 1
+  regenDelayAfterDamage: 3
+  OnDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  maxHp: 15
 --- !u!54 &1092711828033499459
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -171,32 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDamage
   damage: 10
   attackCooldown: 1
---- !u!114 &7437772730516092881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8479731776969005122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7486924aeccd1a74f8b5916e7b957202, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
-  regenPerSecond: 1
-  regenDelayAfterDamage: 3
-  OnDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealed:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  maxHp: 15
---- !u!114 &4083370729020900509
+--- !u!114 &1216502438278243433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -57,20 +57,21 @@ public class EnemyPool : MonoBehaviour
         obj.SetActive(true);
         return obj;
     }
-    public void ReturnEnemy(GameObject enemy, GameObject prefabKey)
+    public void ReturnEnemy(GameObject enemy)
     {
         if (enemy == null) return;
 
         enemy.SetActive(false);
         enemy.transform.position = new Vector3(1000, 1000, 1000);
-        enemy.transform.rotation = Quaternion.identity;
 
-        // КРИТИЧНО: отписываемся от события смерти
         if (WaveTracker.Instance != null)
             WaveTracker.Instance.EnemyReturned(enemy);
 
-        if (pools.ContainsKey(prefabKey))
-            pools[prefabKey].Enqueue(enemy);
+        var refComp = enemy.GetComponent<OriginalPrefabReference>();
+        if (refComp != null && refComp.prefab != null && pools.ContainsKey(refComp.prefab))
+            pools[refComp.prefab].Enqueue(enemy);
+        else
+            Destroy(enemy);  // fallback
     }
 
     private void SetupEnemy(GameObject enemy, WaveConfig.EnemySpawnInfo info)
@@ -78,11 +79,10 @@ public class EnemyPool : MonoBehaviour
         enemy.tag = "Enemy";
         enemy.layer = LayerMask.NameToLayer("Enemy");
 
-        var health = enemy.GetComponent<EnemyHealth>();
-        if (health && info != null)
+        var health = enemy.GetComponent<Health>();
+        if (health != null && info != null)
         {
-            // Пока хардкод, потом будет EnemyConfig.maxHp
-            health.SetMaxHp(15f); // ? добавим setter
+            health.SetMaxHealth(15f);  // ? теперь работает
         }
     }
 }
