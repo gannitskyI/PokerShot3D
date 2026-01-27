@@ -32,7 +32,7 @@ public class EnemyPool : MonoBehaviour
             {
                 GameObject enemy = Instantiate(prefab);
                 enemy.SetActive(false);
-                SetupEnemy(enemy, info);  // передаём info вместо config
+                SetupEnemy(enemy, info);  
                 pools[prefab].Enqueue(enemy);
             }
         }
@@ -71,7 +71,7 @@ public class EnemyPool : MonoBehaviour
         if (refComp != null && refComp.prefab != null && pools.ContainsKey(refComp.prefab))
             pools[refComp.prefab].Enqueue(enemy);
         else
-            Destroy(enemy);  // fallback
+            Destroy(enemy);   
     }
 
     private void SetupEnemy(GameObject enemy, WaveConfig.EnemySpawnInfo info)
@@ -82,7 +82,7 @@ public class EnemyPool : MonoBehaviour
         var health = enemy.GetComponent<Health>();
         if (health != null && info != null)
         {
-            health.SetMaxHealth(15f);  // ? теперь работает
+            health.SetMaxHealth(15f);   
         }
     }
 }

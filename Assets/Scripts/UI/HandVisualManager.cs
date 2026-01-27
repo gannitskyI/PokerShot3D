@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class HandVisualManager : MonoBehaviour
 {
-    [Header("Слоты")]
+    [Header("Slots")]
     [SerializeField] private Transform[] cardSlots = new Transform[5];   
 
-    [Header("Визуал")]
-    [SerializeField] private GameObject cardVisualPrefab;  // CardVisual.prefab
-    [SerializeField] private float flySpeed = 10f;         // скорость влёта
+    [Header("Visual")]
+    [SerializeField] private GameObject cardVisualPrefab;  
+    [SerializeField] private float flySpeed = 10f;        
 
     private List<GameObject> currentCards = new List<GameObject>();
     private ChipMagnet chipMagnet;
@@ -16,11 +16,11 @@ public class HandVisualManager : MonoBehaviour
     private void Awake()
     {
         chipMagnet = GetComponent<ChipMagnet>();
-        if (chipMagnet == null) Debug.LogError("[HandVisual] ChipMagnet не найден!");
+        if (chipMagnet == null) Debug.LogError("chipMagnet not found");
     }
     public void Init()
     {
-        Debug.Log("[HandVisualManager] Инициализирован");
+    
     }
     public GameObject[] GetCurrentCards()
     {
@@ -34,9 +34,9 @@ public class HandVisualManager : MonoBehaviour
         Transform slot = cardSlots[slotIndex];
 
         GameObject visualCard = Instantiate(cardVisualPrefab, fromPosition, Quaternion.identity, slot);
-        visualCard.GetComponent<Chip>().SetCard(cardData.suit, cardData.rank);  // масть/ранг
+        visualCard.GetComponent<Chip>().SetCard(cardData.suit, cardData.rank);   
 
-        // Анимация влёта
+ 
         StartCoroutine(FlyInAnimation(visualCard.transform, slot.position));
 
         currentCards.Add(visualCard);

@@ -13,16 +13,15 @@ public static class PokerEvaluator
     public struct HandResult
     {
         public HandType type;
-        public int multiplier;      // для очков / силы эффекта
+        public int multiplier;     
         public string description;
     }
 
     public static HandResult EvaluateHand(List<Chip> hand)
     {
         if (hand.Count != 5)
-            return new HandResult { type = HandType.HighCard, multiplier = 1, description = "Неполная рука" };
-
-        // Сортируем по рангу (Ace high)
+            return new HandResult { type = HandType.HighCard, multiplier = 1, description = "HighCard" };
+ 
         var sorted = hand.OrderByDescending(c => (int)c.rank).ToList();
 
         bool isFlush = sorted.All(c => c.suit == sorted[0].suit);

@@ -75,8 +75,7 @@ public class RunStateController : MonoBehaviour
         }
 
         OnWaveChanged.Invoke(currentWave);
-
-        Debug.Log($"[RunState] Новый забег — сразу Волна {currentWave}");
+         
     }
 
     public void AdvanceToNextWave()
@@ -130,8 +129,8 @@ public class RunStateController : MonoBehaviour
     private void OnValidate()
     {
         if (normalWaveSequence == null || normalWaveSequence.Length == 0)
-            Debug.LogWarning("[RunStateController] Не назначены normalWaveSequence!");
+            Debug.LogWarning("[RunStateController] Not normalWaveSequence!");
         if (bossWaveConfig == null)
-            Debug.LogWarning("[RunStateController] Не назначен bossWaveConfig!");
+            Debug.LogWarning("[RunStateController] Not bossWaveConfig!");
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using UnityPhysics = UnityEngine.Physics;  // ? псевдоним для избежания конфликта
+using UnityPhysics = UnityEngine.Physics;  
 
 [RequireComponent(typeof(Health), typeof(AutoShooter))]
 public class ComboEffects : MonoBehaviour
@@ -57,8 +57,7 @@ public class ComboEffects : MonoBehaviour
             if (health != null)
                 health.TakeDamage(damage);
         }
-
-        Debug.Log($"[Combo] AOE-взрыв: {hits.Length} врагов получили {damage} dmg");
+         
     }
 
     private void NukeArena()
@@ -68,7 +67,6 @@ public class ComboEffects : MonoBehaviour
         {
             if (e.gameObject.CompareTag("Enemy") && !e.CompareTag("Boss"))
                 e.TakeDamage(9999f);
-        }
-        Debug.Log("[Combo] Роял-флеш — НЮК АРЕНЫ!");
+        } 
     }
 }

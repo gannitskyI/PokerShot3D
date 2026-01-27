@@ -39,8 +39,7 @@ public class GameInitializer : MonoBehaviour
 
             if (vcamTopDown != null)
                 vcamTopDown.Follow = playerInstance.transform;
-
-            // Передача ссылок (без FindObjectOfType)
+             
             var chipMagnet = playerInstance.GetComponent<ChipMagnet>();
             var handVisual = playerInstance.GetComponent<HandVisualManager>();
             var activationAnimator = playerInstance.GetComponent<ActivationAnimator>();
@@ -53,12 +52,11 @@ public class GameInitializer : MonoBehaviour
                 hudManager.Init(health, state: RunStateController.Instance);
 
             RunStateController.Instance.StartNewRun();
-
-            Debug.Log("[GameInitializer] Инициализация завершена");
+             
         }
         else
         {
-            Debug.LogError("[GameInitializer] Не удалось загрузить игрока");
+            Debug.LogError("[GameInitializer] error");
         }
     }
 }

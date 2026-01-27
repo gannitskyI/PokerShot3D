@@ -6,16 +6,16 @@ public class WaveTracker : MonoBehaviour
 {
     public static WaveTracker Instance { get; private set; }
 
-    [Header("События")]
+    [Header("Events")]
     public UnityEvent OnWaveStarted = new UnityEvent();
     public UnityEvent OnWaveCompleted = new UnityEvent();
 
     public List<GameObject> activeEnemies = new List<GameObject>();
 
-    private int liveEnemies = 0;  // ? concurrentEnemies переименован в liveEnemies
+    private int liveEnemies = 0;  
     private bool isWaveActive;
 
-    public int LiveEnemies => liveEnemies;  // ? для HUD
+    public int LiveEnemies => liveEnemies;   
 
     private void Awake()
     {
@@ -35,7 +35,7 @@ public class WaveTracker : MonoBehaviour
         if (!isWaveActive || enemy == null) return;
 
         activeEnemies.Add(enemy);
-        liveEnemies++;  // ? +1 живой враг
+        liveEnemies++;  
 
         var health = enemy.GetComponent<Health>();
         if (health != null)
@@ -59,14 +59,14 @@ public class WaveTracker : MonoBehaviour
 
     public void EnemyDied()
     {
-        liveEnemies--;  // ? -1 живой враг (только при смерти)
+        liveEnemies--;  
         activeEnemies.RemoveAll(e => e == null || !e.activeSelf);
 
         if (liveEnemies == 0 && isWaveActive)
         {
             isWaveActive = false;
             OnWaveCompleted.Invoke();
-            Debug.Log("[WaveTracker] Все враги мертвы — волна завершена");
+            Debug.Log("[WaveTracker] End wave");
         }
     }
 }

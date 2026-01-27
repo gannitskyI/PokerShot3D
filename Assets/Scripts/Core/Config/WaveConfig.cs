@@ -19,8 +19,8 @@ public class WaveConfig : ScriptableObject
     [Serializable]
     public class EnemySpawnInfo
     {
-        [Tooltip("Prefab врага")]
-        public GameObject enemyPrefab;           // ? это поле уже есть
+        [Tooltip("Prefab")]
+        public GameObject enemyPrefab;          
 
         [Range(0f, 1f)]
         public float weight = 1f;

@@ -4,30 +4,29 @@ using UnityEngine;
 public class PlayerConfig : ScriptableObject
 {
     [Header("Movement")]
-    [Tooltip("Базовая скорость (м/с)")]
+    [Tooltip("Base movement speed (m/s)")]
     public float moveSpeed = 5f;
 
-    [Tooltip("Расстояние, на котором игрок останавливается у цели")]
+    [Tooltip("Distance at which player stops near target")]
     public float stopDistance = 0.2f;
 
-    [Tooltip("Drag для естественного торможения")]
+    [Tooltip("Drag for natural deceleration")]
     public float drag = 5f;
 
-    [Header("Combat (позже апгрейды)")]
-    [Tooltip("Базовый HP")]
+    [Header("Combat")]
+    [Tooltip("Base max HP")]
     public int maxHealth = 100;
 
-    [Tooltip("Реген HP/сек вне боя")]
+    [Tooltip("HP regen per second when out of combat")]
     public float healthRegenPerSec = 1f;
 
     [Header("Hybrid Control")]
-    [Tooltip("Порог сдвига (px) для активации follow-mode")]
+    [Tooltip("Pixel threshold to activate follow-mode")]
     public float dragThresholdPx = 10f;
 
-    [Tooltip("Множитель скорости в follow-mode (быстрее обычного)")]
+    [Tooltip("Speed multiplier in follow-mode")]
     public float followSpeedMultiplier = 1.2f;
 
-    [Header("Hybrid Control")]
-    [Tooltip("Минимальное расстояние для тап-цели (игнорируем self-target)")]
+    [Tooltip("Minimum distance to ignore self-target taps")]
     public float minTapDistance = 0.5f;
 }

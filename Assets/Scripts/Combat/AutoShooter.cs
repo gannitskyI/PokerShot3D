@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class AutoShooter : MonoBehaviour
 {
     [SerializeField] private WeaponConfig config;
-    [SerializeField] private Transform[] muzzlePoints; // 3–4 точки вокруг
+    [SerializeField] private Transform[] muzzlePoints;  
 
     public float damageMultiplier = 1f;
     public float fireRateMultiplier = 1f;
@@ -14,13 +14,13 @@ public class AutoShooter : MonoBehaviour
     private float fireTimer;
     private List<Transform> enemiesInRange = new List<Transform>();
 
-    private LineRenderer[] lineRenderers; // для визуала попаданий
+    private LineRenderer[] lineRenderers; 
 
     private void Awake()
     {
-        if (config == null) Debug.LogWarning("[AutoShooter] Нет WeaponConfig!");
+        if (config == null) Debug.LogWarning("[AutoShooter] not WeaponConfig!");
         if (muzzlePoints == null || muzzlePoints.Length == 0)
-            Debug.LogWarning("[AutoShooter] Нет muzzle points!");
+            Debug.LogWarning("[AutoShooter] not muzzle points!");
 
         baseFireRate = config.fireRate;
         lineRenderers = new LineRenderer[config.maxTargets];
@@ -80,21 +80,18 @@ public class AutoShooter : MonoBehaviour
                     }
                 }
             }
-        }
-
-        // Выключаем неиспользованные линии
+        } 
         for (int i = targetsHit; i < lineRenderers.Length; i++)
             lineRenderers[i].enabled = false;
     }
 
     private void ShowShotVisual(Vector3 start, Vector3 end)
     {
-        var lr = lineRenderers[Random.Range(0, lineRenderers.Length)]; // рандомный для разнообразия
+        var lr = lineRenderers[Random.Range(0, lineRenderers.Length)]; 
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
         lr.enabled = true;
-
-        // Авто-выключение через 0.1 сек
+         
         Invoke(nameof(DisableLine), 0.1f);
     }
 

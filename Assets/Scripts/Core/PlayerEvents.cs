@@ -15,13 +15,11 @@ public class PlayerEvents : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        Instance = this;
-        // ”брали DontDestroyOnLoad Ч не нужен, игрок спавнитс€ каждый run
+        Instance = this; 
     }
 
     public void NotifySpawned()
     {
-        OnPlayerSpawned.Invoke();
-        Debug.Log("[PlayerEvents] —павн уведомление отправлено");
+        OnPlayerSpawned.Invoke(); 
     }
 }

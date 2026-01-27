@@ -7,7 +7,7 @@ public class ActivateButton : MonoBehaviour
     [SerializeField] private Button button;
     private ActivationAnimator activationAnimator;
     [SerializeField] private float baseCooldown = 10f;
-    [Header("¬изуализаци€ руки")]
+    [Header("Hand Visualization")]
     [SerializeField] private HandVisualManager handVisualManager;
     private ChipMagnet chipMagnet;
     private float currentCooldown;
@@ -21,11 +21,10 @@ public class ActivateButton : MonoBehaviour
 
         if (chipMagnet == null || handVisual == null || activationAnimator == null)
         {
-            Debug.LogError("[ActivateButton] Init: один из компонентов null!");
+            Debug.LogError("[ActivateButton] Init: null!");
             return;
         }
 
-        Debug.Log("[ActivateButton] Init успешен: всЄ получено");
         button.interactable = chipMagnet.hand.Count >= 2 && currentCooldown <= 0;
     }
 
@@ -54,8 +53,8 @@ public class ActivateButton : MonoBehaviour
         if (text != null)
         {
             text.text = currentCooldown > 0
-                ? $"ј “»¬ј÷»я ({Mathf.Ceil(currentCooldown)}с)"
-                : "ј “»¬ј÷»я";
+                ? $"ACTIVATION ({Mathf.Ceil(currentCooldown)}s)"
+                : "ACTIVATION";
         }
 
         if (currentCooldown > 0)
@@ -67,9 +66,9 @@ public class ActivateButton : MonoBehaviour
         if (chipMagnet == null || chipMagnet.hand.Count < 2) return;
 
         var result = PokerEvaluator.EvaluateHand(chipMagnet.hand);
-        Debug.Log($"[Activate] јктиваци€: {result.description} (x{result.multiplier})");
+        Debug.Log($"[Activate] Activation: {result.description} (x{result.multiplier})");
 
-        activationAnimator.PlayActivation(result);  // через ссылку, без Find
+        activationAnimator.PlayActivation(result);
 
         var handCopy = chipMagnet.hand.ToList();
         foreach (var chip in handCopy)
@@ -83,10 +82,10 @@ public class ActivateButton : MonoBehaviour
 
     private void ApplyComboEffect(PokerEvaluator.HandResult result)
     {
-        var comboEffects = FindObjectOfType<ComboEffects>(); // один раз в сцене, позже через Init
+        var comboEffects = FindObjectOfType<ComboEffects>();
         if (comboEffects != null)
             comboEffects.ApplyCombo(result);
         else
-            Debug.LogWarning("[ActivateButton] ComboEffects не найден!");
+            Debug.LogWarning("[ActivateButton] ComboEffects not found");
     }
 }

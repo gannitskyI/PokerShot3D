@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class EnemyDamage : MonoBehaviour
 {
-    [SerializeField] private float damage = 10f;           // урон за касание
-    [SerializeField] private float attackCooldown = 1f;    // чтобы не били каждую миллисекунду
+    [SerializeField] private float damage = 10f;            
+    [SerializeField] private float attackCooldown = 1f;    
 
     private float lastAttackTime;
 
@@ -15,8 +15,7 @@ public class EnemyDamage : MonoBehaviour
             if (health != null)
             {
                 health.TakeDamage(damage);
-                lastAttackTime = Time.time;
-                Debug.Log($"[EnemyDamage] Игрок получил {damage} урона от {gameObject.name}");
+                lastAttackTime = Time.time; 
             }
         }
     }

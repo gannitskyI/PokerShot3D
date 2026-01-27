@@ -19,7 +19,7 @@ public class Chip : MonoBehaviour
     public void SetRandomCard()
     {
         suit = (Suit)Random.Range(0, 4);
-        rank = (Rank)Random.Range(2, 15); // 2–14 (Ace=14)
+        rank = (Rank)Random.Range(2, 15); 
         UpdateVisual();
     }
 
@@ -31,9 +31,8 @@ public class Chip : MonoBehaviour
     }
 
     private void UpdateVisual()
-    {
-        // Позже: меняем цвет/material по suit
-        Debug.Log($"Чип: {rank} of {suit}");
+    { 
+        Debug.Log($"Chip: {rank} of {suit}");
     }
 }
  

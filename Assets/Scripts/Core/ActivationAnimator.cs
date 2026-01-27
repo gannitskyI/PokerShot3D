@@ -1,12 +1,12 @@
 using UnityEngine;
-using DG.Tweening;                  // DOTween (после установки)
-using Unity.Cinemachine;                  // Cinemachine Impulse
-using UnityEngine.VFX;  // ? добавь это
+using DG.Tweening;
+using Unity.Cinemachine;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(ChipMagnet))]
 public class ActivationAnimator : MonoBehaviour
 {
-    [Header("Разлёт карт")]
+    [Header("Card Spread")]
     [SerializeField] private float explodeRadius = 5f;
     [SerializeField] private float explodeDuration = 0.8f;
 
@@ -14,7 +14,7 @@ public class ActivationAnimator : MonoBehaviour
     [SerializeField] private CinemachineImpulseSource impulseSource;
 
     [Header("VFX")]
-    [SerializeField] private VisualEffect activationBurst; // ? теперь VisualEffect
+    [SerializeField] private VisualEffect activationBurst;
 
     private ChipMagnet chipMagnet;
     private HandVisualManager handVisual;
@@ -32,23 +32,22 @@ public class ActivationAnimator : MonoBehaviour
     {
         if (handVisual == null) return;
 
-        // 1. VFX вспышка
         if (activationBurst != null)
         {
-            activationBurst.Stop(); // очищаем старые частицы
+            activationBurst.Stop();
             activationBurst.SetVector4("StartColor", GetColorByHand(result.type));
-            activationBurst.Play(); // запускаем новый burst
-            Debug.Log("[ActivationAnimator] VFX burst: Stop + Play + цвет установлен");
+            activationBurst.Play();
+            Debug.Log("[ActivationAnimator] VFX burst: Stop + Play + color set");
         }
 
-        // 2. Shake камеры
+
         if (impulseSource != null)
         {
             float shakeForce = result.multiplier * 0.5f;
             impulseSource.GenerateImpulse(new Vector3(shakeForce, shakeForce * 0.5f, 0));
         }
 
-        // 3. Разлёт карт — каждый tween сам уничтожает карту
+
         var cards = handVisual.GetCurrentCards();
         foreach (var card in cards)
         {
@@ -57,7 +56,7 @@ public class ActivationAnimator : MonoBehaviour
             Vector3 randomDir = Random.onUnitSphere;
             randomDir.y = Mathf.Abs(randomDir.y);
 
-            // Самый длинный tween — move
+
             card.transform.DOMove(card.transform.position + randomDir * explodeRadius, explodeDuration)
                 .SetEase(Ease.OutExpo)
                 .OnComplete(() => SafeDestroy(card));
@@ -68,7 +67,6 @@ public class ActivationAnimator : MonoBehaviour
             card.transform.DORotate(Random.insideUnitSphere * 360f, explodeDuration, RotateMode.FastBeyond360);
         }
 
-        // Если карт нет — очищаем сразу
         if (cards.Length == 0)
             handVisual.ClearHandVisual();
     }

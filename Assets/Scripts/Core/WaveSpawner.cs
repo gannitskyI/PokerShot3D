@@ -68,7 +68,7 @@ public class WaveSpawner : MonoBehaviour
         var chosenInfo = GetWeightedEnemyInfo(currentWave);
         if (chosenInfo == null || chosenInfo.enemyPrefab == null)
         {
-            Debug.LogError("[WaveSpawner] Нет префаба");
+            Debug.LogError("[WaveSpawner] Not prefab");
             return;
         }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CardRotate : MonoBehaviour
 {
-    [SerializeField] private float rotateSpeed = 45f;  // град/сек
+    [SerializeField] private float rotateSpeed = 45f;   
 
     void Update()
     {
