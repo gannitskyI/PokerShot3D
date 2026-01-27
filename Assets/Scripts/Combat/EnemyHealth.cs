@@ -24,14 +24,31 @@ public class EnemyHealth : Health
             Die();
         }
     }
+
     private void Die()
     {
         RunStateController.Instance.AddScore(50);
 
         if (WaveTracker.Instance != null)
-            WaveTracker.Instance.EnemyDied();  // ? только смерть
+            WaveTracker.Instance.EnemyDied();
 
-        // Ќ≈ SetActive(false) здесь Ч пул сам вернЄт
-        EnemyPool.Instance.ReturnEnemy(gameObject);  // ? только gameObject
+        // ¬ќ——“јЌќ¬Ћ≈ЌЌџ… ƒ–ќѕ „»ѕќ¬
+        if (ChipPool.Instance != null)
+        {
+            GameObject chip = ChipPool.Instance.GetChip();
+            if (chip != null)
+            {
+                chip.transform.position = transform.position + Vector3.up * 0.5f;
+                var chipComp = chip.GetComponent<Chip>();
+                if (chipComp != null)
+                {
+                    chipComp.SetRandomCard();
+                }
+                Debug.Log("[EnemyHealth] ƒропнул чип!");
+            }
+        }
+
+        // ¬озврат в пул
+        EnemyPool.Instance.ReturnEnemy(gameObject);
     }
 }
