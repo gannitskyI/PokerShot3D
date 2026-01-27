@@ -7,10 +7,8 @@ public class HUDManager : MonoBehaviour
     [Header("HP")]
     [SerializeField] private Image hpBarFill;
     [SerializeField] private TextMeshProUGUI hpText;
-
     [Header("Score")]
     [SerializeField] private TextMeshProUGUI scoreText;
-
     [Header("Wave")]
     [SerializeField] private TextMeshProUGUI waveText;
     [SerializeField] private Image waveTimerFill;
@@ -23,14 +21,14 @@ public class HUDManager : MonoBehaviour
     {
         playerHealth = health;
         runState = state;
-        maxHp = playerHealth.maxHealth;  // теперь maxHealth public
+        maxHp = playerHealth.maxHealth;
 
-        UpdateHUD();
-
-        // Подписка на события
         playerHealth.OnDamageTaken.AddListener(OnDamage);
         playerHealth.OnHealed.AddListener(OnHeal);
         runState.OnScoreChanged.AddListener(OnScoreChanged);
+        runState.OnWaveChanged.AddListener(OnWaveChanged);
+
+        UpdateHUD();
     }
 
     private void OnEnable()
@@ -40,6 +38,7 @@ public class HUDManager : MonoBehaviour
             playerHealth.OnDamageTaken.AddListener(OnDamage);
             playerHealth.OnHealed.AddListener(OnHeal);
             runState.OnScoreChanged.AddListener(OnScoreChanged);
+            runState.OnWaveChanged.AddListener(OnWaveChanged);
         }
     }
 
@@ -51,7 +50,10 @@ public class HUDManager : MonoBehaviour
             playerHealth.OnHealed.RemoveListener(OnHeal);
         }
         if (runState != null)
+        {
             runState.OnScoreChanged.RemoveListener(OnScoreChanged);
+            runState.OnWaveChanged.RemoveListener(OnWaveChanged);
+        }
     }
 
     private void Update()
@@ -84,9 +86,13 @@ public class HUDManager : MonoBehaviour
         scoreText.text = $"{score}";
     }
 
+    private void OnWaveChanged(int wave)
+    {
+        waveText.text = $"Wave {wave}";
+    }
+
     private void UpdateWaveTimer()
     {
-        // Пока заглушка — позже таймер из WaveSpawner
         waveTimerFill.fillAmount = 0.7f;
     }
 }

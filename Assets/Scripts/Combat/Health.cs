@@ -50,6 +50,7 @@ public class Health : MonoBehaviour
         {
             Die();
         }
+
     }
 
     public void Heal(float amount)

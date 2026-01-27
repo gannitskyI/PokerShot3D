@@ -4,72 +4,61 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using System.Threading.Tasks;
 using Unity.Cinemachine;
 
-
-public class Bootstrap : MonoBehaviour
+public class GameInitializer : MonoBehaviour
 {
-    [SerializeField] private string playerAddressableKey = "PlayerPrefab";  // Ключ Addressable
-    [SerializeField] private PlayerConfig playerConfig;                     // SO
-    [SerializeField] private Transform playerSpawnPoint;                    // Пустой GO в центре арены
-    [SerializeField] private CinemachineCamera vcamTopDown;  // перетащи в инспекторе
+    [Header("Addressables")]
+    [SerializeField] private string playerAddressableKey = "PlayerPrefab";
 
-    private void Start()
+    [Header("Spawn")]
+    [SerializeField] private Transform playerSpawnPoint;
+
+    [Header("Camera")]
+    [SerializeField] private CinemachineCamera vcamTopDown;
+
+    [Header("Systems (drag in inspector)")]
+    [SerializeField] private ActivateButton activateButton;
+    [SerializeField] private HUDManager hudManager;
+    [SerializeField] private WaveSpawner waveSpawner;
+
+    private async void Awake()
     {
-        var initOp = Addressables.InitializeAsync();
-        initOp.Completed += handle =>
-        {
-            if (handle.Status == AsyncOperationStatus.Succeeded)
-            {
-                Debug.Log("[Bootstrap] Addressables успешно инициализированы");
-        
-                SpawnPlayerAsync().ContinueWith(_ => Debug.Log("[Bootstrap] Инициализация завершена"));
-            }
-            else
-            {
-                Debug.LogError("[Bootstrap] Ошибка инициализации Addressables: " + handle.OperationException?.Message);
-            }
-        };
+        await InitializeGameAsync();
     }
 
-    private async Task SpawnPlayerAsync()
+    private async Task InitializeGameAsync()
     {
-        var handle = Addressables.LoadAssetAsync<GameObject>(playerAddressableKey);
-        await handle.Task;
+        var initHandle = Addressables.InitializeAsync();
+        await initHandle.Task;
 
-        if (handle.Status == AsyncOperationStatus.Succeeded)
+        var playerHandle = Addressables.LoadAssetAsync<GameObject>(playerAddressableKey);
+        await playerHandle.Task;
+
+        if (playerHandle.Status == AsyncOperationStatus.Succeeded)
         {
-            GameObject playerPrefab = handle.Result;
-            GameObject playerInstance = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+            GameObject playerInstance = Instantiate(playerHandle.Result, playerSpawnPoint.position, Quaternion.identity);
 
-            // Камера
             if (vcamTopDown != null)
                 vcamTopDown.Follow = playerInstance.transform;
 
-            // Передача ссылок
-            var activateButton = FindObjectOfType<ActivateButton>();
-            if (activateButton != null)
-            {
-                var chipMagnet = playerInstance.GetComponent<ChipMagnet>();
-                var handVisual = playerInstance.GetComponent<HandVisualManager>();
-                var activationAnimator = playerInstance.GetComponent<ActivationAnimator>();
-                if (chipMagnet != null && handVisual != null && activationAnimator != null)
-                    activateButton.Init(chipMagnet, handVisual, activationAnimator);
-            }
+            // Передача ссылок (без FindObjectOfType)
+            var chipMagnet = playerInstance.GetComponent<ChipMagnet>();
+            var handVisual = playerInstance.GetComponent<HandVisualManager>();
+            var activationAnimator = playerInstance.GetComponent<ActivationAnimator>();
+            var health = playerInstance.GetComponent<Health>();
 
-            // Теперь стартуем run (игрок уже спавнен)
+            if (activateButton != null && chipMagnet != null && handVisual != null && activationAnimator != null)
+                activateButton.Init(chipMagnet, handVisual, activationAnimator);
+
+            if (hudManager != null && health != null)
+                hudManager.Init(health, state: RunStateController.Instance);
+
             RunStateController.Instance.StartNewRun();
 
-            Debug.Log("[Bootstrap] Инициализация завершена");
+            Debug.Log("[GameInitializer] Инициализация завершена");
         }
         else
         {
-            Debug.LogError($"[Bootstrap] Не удалось загрузить {playerAddressableKey}");
+            Debug.LogError("[GameInitializer] Не удалось загрузить игрока");
         }
-    }
-
-
-    private void OnDestroy()
-    {
-        // Cleanup Addressables (хорошая практика)
-        Addressables.ReleaseInstance(gameObject);
     }
 }
