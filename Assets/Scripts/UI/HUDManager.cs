@@ -7,8 +7,10 @@ public class HUDManager : MonoBehaviour
     [Header("HP")]
     [SerializeField] private Image hpBarFill;
     [SerializeField] private TextMeshProUGUI hpText;
+
     [Header("Score")]
     [SerializeField] private TextMeshProUGUI scoreText;
+
     [Header("Wave")]
     [SerializeField] private TextMeshProUGUI waveText;
     [SerializeField] private Image waveTimerFill;
@@ -16,39 +18,71 @@ public class HUDManager : MonoBehaviour
     private Health playerHealth;
     private RunStateController runState;
     private float maxHp;
+    private bool isInitialized;
 
     public void Init(Health health, RunStateController state)
     {
+        if (health == null || state == null)
+        {
+            Debug.LogError("[HUDManager] Init called with null parameters!");
+            return;
+        }
+
+        UnsubscribeFromEvents();
+
         playerHealth = health;
         runState = state;
         maxHp = playerHealth.maxHealth;
 
-        playerHealth.OnDamageTaken.AddListener(OnDamage);
-        playerHealth.OnHealed.AddListener(OnHeal);
-        runState.OnScoreChanged.AddListener(OnScoreChanged);
-        runState.OnWaveChanged.AddListener(OnWaveChanged);
+        SubscribeToEvents();
+        isInitialized = true;
 
         UpdateHUD();
+
+        Debug.Log("[HUDManager] Initialized successfully");
     }
 
     private void OnEnable()
     {
-        if (playerHealth != null && runState != null)
+        if (isInitialized && playerHealth != null && runState != null)
+        {
+            SubscribeToEvents();
+        }
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromEvents();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
+        if (playerHealth != null)
         {
             playerHealth.OnDamageTaken.AddListener(OnDamage);
             playerHealth.OnHealed.AddListener(OnHeal);
+        }
+
+        if (runState != null)
+        {
             runState.OnScoreChanged.AddListener(OnScoreChanged);
             runState.OnWaveChanged.AddListener(OnWaveChanged);
         }
     }
 
-    private void OnDisable()
+    private void UnsubscribeFromEvents()
     {
         if (playerHealth != null)
         {
             playerHealth.OnDamageTaken.RemoveListener(OnDamage);
             playerHealth.OnHealed.RemoveListener(OnHeal);
         }
+
         if (runState != null)
         {
             runState.OnScoreChanged.RemoveListener(OnScoreChanged);
@@ -63,36 +97,90 @@ public class HUDManager : MonoBehaviour
 
     private void UpdateHUD()
     {
-        if (playerHealth == null || runState == null) return;
+        if (!isInitialized || playerHealth == null || runState == null)
+        {
+            return;
+        }
 
-        hpBarFill.fillAmount = playerHealth.NormalizedHealth;
-        hpText.text = $"{Mathf.RoundToInt(playerHealth.CurrentHealth)} / {Mathf.RoundToInt(maxHp)}";
-        scoreText.text = $"{runState.CurrentScore}";
-        waveText.text = $"Wave {runState.CurrentWave}";
+        UpdateHealthDisplay();
+        UpdateScoreDisplay();
+        UpdateWaveDisplay();
+    }
+
+    private void UpdateHealthDisplay()
+    {
+        if (hpBarFill != null)
+        {
+            hpBarFill.fillAmount = playerHealth.NormalizedHealth;
+        }
+
+        if (hpText != null)
+        {
+            hpText.text = $"{Mathf.RoundToInt(playerHealth.CurrentHealth)} / {Mathf.RoundToInt(maxHp)}";
+        }
+    }
+
+    private void UpdateScoreDisplay()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = $"{runState.CurrentScore}";
+        }
+    }
+
+    private void UpdateWaveDisplay()
+    {
+        if (waveText != null)
+        {
+            waveText.text = $"Wave {runState.CurrentWave}";
+        }
     }
 
     private void OnDamage(float dmg)
     {
-        UpdateHUD();
+        UpdateHealthDisplay();
     }
 
     private void OnHeal(float heal)
     {
-        UpdateHUD();
+        UpdateHealthDisplay();
     }
 
     private void OnScoreChanged(int score)
     {
-        scoreText.text = $"{score}";
+        if (scoreText != null)
+        {
+            scoreText.text = $"{score}";
+        }
     }
 
     private void OnWaveChanged(int wave)
     {
-        waveText.text = $"Wave {wave}";
+        if (waveText != null)
+        {
+            waveText.text = $"Wave {wave}";
+        }
     }
 
     private void UpdateWaveTimer()
     {
-        waveTimerFill.fillAmount = 0.7f;
+        if (waveTimerFill != null)
+        {
+            waveTimerFill.fillAmount = 0.7f;
+        }
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (hpBarFill == null)
+            Debug.LogWarning("[HUDManager] HP Bar Fill not assigned");
+        if (hpText == null)
+            Debug.LogWarning("[HUDManager] HP Text not assigned");
+        if (scoreText == null)
+            Debug.LogWarning("[HUDManager] Score Text not assigned");
+        if (waveText == null)
+            Debug.LogWarning("[HUDManager] Wave Text not assigned");
+    }
+#endif
 }

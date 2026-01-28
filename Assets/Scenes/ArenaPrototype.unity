@@ -751,7 +751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 100%
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19fb20a7c60146241bc28e264a1e3a46, type: 2}
   m_sharedMaterial: {fileID: 6022449245778922385, guid: 19fb20a7c60146241bc28e264a1e3a46, type: 2}
@@ -888,7 +888,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:11
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19fb20a7c60146241bc28e264a1e3a46, type: 2}
   m_sharedMaterial: {fileID: 6022449245778922385, guid: 19fb20a7c60146241bc28e264a1e3a46, type: 2}
@@ -1592,6 +1592,9 @@ MonoBehaviour:
   OnScoreChanged:
     m_PersistentCalls:
       m_Calls: []
+  OnWaveChanged:
+    m_PersistentCalls:
+      m_Calls: []
   normalWaveSequence:
   - {fileID: 11400000, guid: 46f22f0001016ff45bf8141d848856aa, type: 2}
   - {fileID: 11400000, guid: f1e9a82970016024b9b6340fb180af67, type: 2}
@@ -1933,7 +1936,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19fb20a7c60146241bc28e264a1e3a46, type: 2}
   m_sharedMaterial: {fileID: 6022449245778922385, guid: 19fb20a7c60146241bc28e264a1e3a46, type: 2}
@@ -1960,7 +1963,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 58.95
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2058,9 +2061,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bootstrap
   playerAddressableKey: PlayerPrefab
-  playerConfig: {fileID: 11400000, guid: 47b518bdf043ad945a1e16a3ae2d2a15, type: 2}
   playerSpawnPoint: {fileID: 1046739942}
   vcamTopDown: {fileID: 1216850642}
+  activateButton: {fileID: 1916237588}
+  hudManager: {fileID: 743342050}
+  waveSpawner: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

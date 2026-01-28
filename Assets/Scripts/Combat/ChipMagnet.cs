@@ -59,7 +59,6 @@ public class ChipMagnet : MonoBehaviour
         ChipPool.Instance.ReturnChip(chip.gameObject);
         if (playerEvents != null)
             playerEvents.OnHandChanged.Invoke();
-        var result = PokerEvaluator.EvaluateHand(hand);
     }
 
     private void OnDrawGizmosSelected()
